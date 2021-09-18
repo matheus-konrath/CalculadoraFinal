@@ -1,5 +1,7 @@
 package br.com.Compasso.calculadora.modelo;
 
+import java.math.BigInteger;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;

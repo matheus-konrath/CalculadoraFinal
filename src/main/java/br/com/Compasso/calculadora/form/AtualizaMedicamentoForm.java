@@ -1,6 +1,8 @@
 package br.com.Compasso.calculadora.form;
 
 
+import java.math.BigInteger;
+
 import br.com.Compasso.calculadora.modelo.MedicamentoEntity;
 import br.com.Compasso.calculadora.repositorio.MedicamentoRepositorio;
 
@@ -16,7 +18,7 @@ public class AtualizaMedicamentoForm {
 		this.nome = nome;
 	}
 	
-	public MedicamentoEntity alterar(Long id , MedicamentoRepositorio medicamentoRespositorio) {
+	public MedicamentoEntity alterar(BigInteger id , MedicamentoRepositorio medicamentoRespositorio) {
 		MedicamentoEntity medicamento = medicamentoRespositorio.getById(id);
 		medicamento.setNome(this.nome);
 		return medicamento;

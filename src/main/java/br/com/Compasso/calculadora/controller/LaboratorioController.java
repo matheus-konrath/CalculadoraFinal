@@ -1,5 +1,6 @@
 package br.com.Compasso.calculadora.controller;
 
+import java.math.BigInteger;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,7 @@ public class LaboratorioController {
 
 	// Busca o elemento pelo id
 	@GetMapping("/laboratorio/{id}")
-	public ResponseEntity<LaboratorioDto> detalhar(@PathVariable Long id) {
+	public ResponseEntity<LaboratorioDto> detalhar(@PathVariable BigInteger id) {
 		ResponseEntity<LaboratorioDto> lab = laboratorioService.detalhaId(id);
 		return lab;
 	}
@@ -56,7 +57,7 @@ public class LaboratorioController {
 	// Atualiza o elemento
 	@PutMapping("/laboratorio/{id}")
 	@Transactional
-	public ResponseEntity<LaboratorioDto> atua(@PathVariable Long id,  @RequestBody @Validated LaboratorioForm form) {
+	public ResponseEntity<LaboratorioDto> atua(@PathVariable BigInteger id,  @RequestBody @Validated LaboratorioForm form) {
 		LaboratorioEntity laboratorio = laboratorioService.atualizar(id, form);
 		return ResponseEntity.ok(new LaboratorioDto(laboratorio));
 	}
@@ -64,7 +65,7 @@ public class LaboratorioController {
 	
 	// Remove do Banco de Dados
 	@DeleteMapping("{id}")
-	public ResponseEntity<?> exc(@PathVariable Long id) {
+	public ResponseEntity<?> exc(@PathVariable BigInteger id) {
 		 ResponseEntity<?> laboratorio = laboratorioService.excluir(id);
 		 return laboratorio;
 		

@@ -1,5 +1,7 @@
 package br.com.Compasso.calculadora.form;
 
+import java.math.BigInteger;
+
 import com.sun.istack.NotNull;
 
 import br.com.Compasso.calculadora.modelo.GrupoMedicamentoEntity;
@@ -18,7 +20,7 @@ public class GrupoMedicamentoForm {
 		this.nome = nome;
 	}
 	
-	public GrupoMedicamentoEntity atualiza(Long id , GrupoMedicamentoRepositorio grupoMedicamentoRespositorio) {
+	public GrupoMedicamentoEntity atualiza(BigInteger id , GrupoMedicamentoRepositorio grupoMedicamentoRespositorio) {
 		GrupoMedicamentoEntity grupo = grupoMedicamentoRespositorio.getById(id);
 		grupo.setNome(this.nome);
 		return grupo;

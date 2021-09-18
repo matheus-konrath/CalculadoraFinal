@@ -1,6 +1,7 @@
 package br.com.Compasso.calculadora.controller;
 
 
+import java.math.BigInteger;
 import java.util.List;
 
 
@@ -30,7 +31,7 @@ import io.swagger.annotations.Api;
 @RestController
 @ResponseBody
 @Api(value = "grupomedicamento")
-@RequestMapping("/grupomedicamento")
+@RequestMapping("/grupoMedicamento")
 public class GrupoMedicamentoController {
 
 	
@@ -40,21 +41,21 @@ public class GrupoMedicamentoController {
 
 	// Gera todos os elementos do GrupoMedicamentos
 	@GetMapping("/grupo")
-	public List<GrupoMedicamentoDto> getGrupoMedicamento() {
-		return GrupoMedicamentoDto.converter(grupoMedicamentoService.imprimi());
+	public ResponseEntity<List<GrupoMedicamentoDto>> getGrupoMedicamento() {
+		return (grupoMedicamentoService.imprime());
 	}
 	
 	// Insere um elemento
 	@PostMapping("/grupo")
 	@Transactional
-	public GrupoMedicamentoDto Cadastrar(@RequestBody @Validated AtualizacaoGrupoForm form) {
-		GrupoMedicamentoEntity grupoMedicamento = grupoMedicamentoService.insercao(form);
-		return new GrupoMedicamentoDto(grupoMedicamento);
+	public ResponseEntity<GrupoMedicamentoEntity> Cadastrar(@RequestBody @Validated AtualizacaoGrupoForm form) {
+		return (grupoMedicamentoService.insercao(form));
+		
 	}
 	
 	// Busca o elemento pelo id
 	@GetMapping("/grupo/{id}")
-	public ResponseEntity<GrupoMedicamentoDto> detalhar(@PathVariable Long id) {
+	public ResponseEntity<GrupoMedicamentoDto> detalhar(@PathVariable BigInteger id) {
 		ResponseEntity<GrupoMedicamentoDto> grupo = grupoMedicamentoService.detalhaId(id);
 		return grupo;
 	}
@@ -62,14 +63,14 @@ public class GrupoMedicamentoController {
 	// Atualiza o elemento
 	@PutMapping("/grupo/{id}")
 	@Transactional
-	public ResponseEntity<GrupoMedicamentoDto> atualizacao(@PathVariable Long id,  @RequestBody @Validated GrupoMedicamentoForm form) {
+	public ResponseEntity<GrupoMedicamentoDto> atualizacao(@PathVariable BigInteger id,  @RequestBody @Validated GrupoMedicamentoForm form) {
 		GrupoMedicamentoEntity grupoMedicamento = grupoMedicamentoService.atualizar(id, form);
 		return ResponseEntity.ok(new GrupoMedicamentoDto(grupoMedicamento));
 	}
 	
 	// Remove do Banco de Dados
 	@DeleteMapping("{id}")
-	public ResponseEntity<?> remover(@PathVariable Long id) {
+	public ResponseEntity<?> remover(@PathVariable BigInteger id) {
 		 ResponseEntity<?> grupo = grupoMedicamentoService.remover(id);
 		 return grupo;
 		

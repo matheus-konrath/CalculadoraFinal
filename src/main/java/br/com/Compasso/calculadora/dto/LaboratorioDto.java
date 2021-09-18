@@ -1,19 +1,20 @@
 package br.com.Compasso.calculadora.dto;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.stream.Collectors;
 import br.com.Compasso.calculadora.modelo.LaboratorioEntity;
 
 public class LaboratorioDto {
 
-	private Long id;
+	private BigInteger id;
 	private String nome;
 	
 	public LaboratorioDto(LaboratorioEntity lab) {
 		this.id = lab.getId();
 		this.nome = lab.getNome();
 	}
-	public Long getId() {
+	public BigInteger getId() {
 		return id;
 	}
 	public String getNome() {

@@ -1,6 +1,7 @@
 package br.com.Compasso.calculadora.controller;
 
 
+import java.math.BigInteger;
 import java.util.List;
 
 
@@ -18,8 +19,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import br.com.Compasso.calculadora.dto.MedicamentoConfiguracaoDto;
 import br.com.Compasso.calculadora.dto.MedicamentoDto;
 import br.com.Compasso.calculadora.form.AtualizaMedicamentoForm;
+import br.com.Compasso.calculadora.form.MedicamentoConfiguraForm;
 import br.com.Compasso.calculadora.form.MedicamentoForm;
 import br.com.Compasso.calculadora.modelo.MedicamentoEntity;
 import br.com.Compasso.calculadora.service.MedicamentoServiceImpl;
@@ -37,33 +42,40 @@ public class MedicamentoController {
 	private MedicamentoServiceImpl medicamentoService;
 
 	@GetMapping("/medi")
-	public List<MedicamentoDto> getMedicamento() {
-		return MedicamentoDto.converter(medicamentoService.imprimi());
+	public ResponseEntity<List<MedicamentoDto>> lista() {
+		return (medicamentoService.lista());
 	}
 
-	@PostMapping("/medi")
+/*	@PostMapping("/medi")
 	@Transactional
 	public MedicamentoDto Cadastrar(@RequestBody @Validated MedicamentoForm form) {
 		MedicamentoEntity medicamento = medicamentoService.inser(form);
 		return new MedicamentoDto(medicamento);
 	}
+	*/
+	
+	@PostMapping("/medi")
+	@Transactional
+	public ResponseEntity<MedicamentoConfiguracaoDto> criar(@RequestBody MedicamentoConfiguraForm medicamentoConfiguracaoForm,
+			UriComponentsBuilder uriBuilder) {
+		return medicamentoService.criar(medicamentoConfiguracaoForm, uriBuilder);
+	}
 
 	@GetMapping("/medi/{id}")
-	public ResponseEntity<MedicamentoDto> detalhar(@PathVariable Long id) {
+	public ResponseEntity<MedicamentoDto> detalhar(@PathVariable BigInteger id) {
 		ResponseEntity<MedicamentoDto> medicamento = medicamentoService.detalhaId(id);
 		return medicamento;
 	}
 
 	@PutMapping("/medi/{id}")
 	@Transactional
-	public ResponseEntity<MedicamentoDto> atualizacao(@PathVariable Long id,  @RequestBody @Validated AtualizaMedicamentoForm form) {
-		MedicamentoEntity medicamento = medicamentoService.altera(id, form);
-		return ResponseEntity.ok(new MedicamentoDto(medicamento));
+	public ResponseEntity<MedicamentoConfiguracaoDto> atualizar(@PathVariable BigInteger id, @RequestBody MedicamentoConfiguraForm medicamentoConfiguraForm) {
+		return (medicamentoService.atualiza(id, medicamentoConfiguraForm));
 	}
 
 	@DeleteMapping("{id}")
-	public ResponseEntity<?> remover(@PathVariable Long id) {
-		 ResponseEntity<?> medicamento = medicamentoService.retirar(id);
+	public ResponseEntity<?> remover(@PathVariable BigInteger id) {
+		 ResponseEntity<?> medicamento = medicamentoService.excluir(id);
 		 return medicamento;
 		
 	}

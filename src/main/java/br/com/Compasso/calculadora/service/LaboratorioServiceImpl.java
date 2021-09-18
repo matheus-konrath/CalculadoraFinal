@@ -1,5 +1,6 @@
 package br.com.Compasso.calculadora.service;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class LaboratorioServiceImpl {
 	}
 	
 	// Get por Id
-	public ResponseEntity<LaboratorioDto> detalhaId(Long id){
+	public ResponseEntity<LaboratorioDto> detalhaId(BigInteger id){
 		Optional<LaboratorioEntity> laboratorio = laboratorioRepositorio.findById(id);
 		if (laboratorio.isPresent()){
 			return ResponseEntity.ok(new LaboratorioDto(laboratorioRepositorio.getById(id)));
@@ -49,7 +50,7 @@ public class LaboratorioServiceImpl {
 	}
 	
 	//Put
-	public LaboratorioEntity atualizar(Long id, LaboratorioForm form) {
+	public LaboratorioEntity atualizar(BigInteger id, LaboratorioForm form) {
 		Optional<LaboratorioEntity> optional = laboratorioRepositorio.findById(id);
 		if(optional.isPresent()) {
 			if(form.getNome().length() == 0) {
@@ -61,7 +62,7 @@ public class LaboratorioServiceImpl {
 		
 	}
 	
-	public ResponseEntity<?> excluir(Long id) {
+	public ResponseEntity<?> excluir(BigInteger id) {
 		Optional<LaboratorioEntity> laboratorio = laboratorioRepositorio.findById(id);
 		if (laboratorio.isPresent()) {
 			laboratorioRepositorio.deleteById(id);  // remove pelo id

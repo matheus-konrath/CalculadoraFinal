@@ -1,5 +1,6 @@
 package br.com.Compasso.calculadora.dto;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.stream.Collectors;
 

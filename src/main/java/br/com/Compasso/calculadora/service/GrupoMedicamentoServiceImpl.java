@@ -1,5 +1,7 @@
 package br.com.Compasso.calculadora.service;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,12 +22,18 @@ public class GrupoMedicamentoServiceImpl {
 	private GrupoMedicamentoRepositorio grupoMedicamentoRepositorio;
 
 	//busca elementos do grupoMedicamentos inseridos  #GET
-	public List<GrupoMedicamentoEntity> imprimi() {
-		List<GrupoMedicamentoEntity> grupo = grupoMedicamentoRepositorio.findAll(); // Consulta todos os registros
-		return grupo;
+	public ResponseEntity<List<GrupoMedicamentoDto>> imprime() {
+		List<GrupoMedicamentoEntity> grupoMedicamento = grupoMedicamentoRepositorio.findAll();// Consulta todos os registros
+		List<GrupoMedicamentoDto> grupoMedica = new ArrayList<GrupoMedicamentoDto>();
+		
+		grupoMedicamento.forEach(grupo -> {			// percorrer o Array
+			grupoMedica.add(new GrupoMedicamentoDto(grupo));
+		});
+		
+		return ResponseEntity.ok(grupoMedica);
 	}
 	// GET por id, busca pelo id
-	public ResponseEntity<GrupoMedicamentoDto> detalhaId(Long id) {
+	public ResponseEntity<GrupoMedicamentoDto> detalhaId(BigInteger id) {
 		Optional<GrupoMedicamentoEntity> medicamento = grupoMedicamentoRepositorio.findById(id);
 		if (medicamento.isPresent()) { // Verifica se tem 
 			return ResponseEntity.ok(new GrupoMedicamentoDto(grupoMedicamentoRepositorio.getById(id))); 
@@ -34,8 +42,9 @@ public class GrupoMedicamentoServiceImpl {
 		return ResponseEntity.notFound().build(); // Não encontrado
 	}
 	
+	
 	// POST insere no Banco de dados
-	public GrupoMedicamentoEntity insercao(AtualizacaoGrupoForm form) {
+	public ResponseEntity<GrupoMedicamentoEntity>  insercao(AtualizacaoGrupoForm form) {
 		Optional<GrupoMedicamentoEntity> grupo = grupoMedicamentoRepositorio.findByNome(form.getNome());
 		if(grupo.isPresent()) {	// verifica se esta presente
 			throw new RuntimeException("Esse nome ja existe");	// gera RuntimeException
@@ -45,11 +54,11 @@ public class GrupoMedicamentoServiceImpl {
 		}
 		
 		GrupoMedicamentoEntity grupoMedicamento = form.converter();
-		return grupoMedicamentoRepositorio.save(grupoMedicamento); // Salvar no Banco de Dados
+		return ResponseEntity.ok(grupoMedicamentoRepositorio.save(grupoMedicamento)); // Salvar no Banco de Dados
 
 	}
 	//PUT atualiza o elemento
-	public GrupoMedicamentoEntity atualizar(Long id, GrupoMedicamentoForm form) {
+	public GrupoMedicamentoEntity atualizar(BigInteger id, GrupoMedicamentoForm form) {
 		Optional<GrupoMedicamentoEntity> optional = grupoMedicamentoRepositorio.findById(id);
 		if(optional.isPresent()) {
 			if(form.getNome().length() == 0) {
@@ -62,7 +71,7 @@ public class GrupoMedicamentoServiceImpl {
 	}
 	
 	// DELETE remove o elemento do Banco de dados
-	public ResponseEntity<?> remover(Long id) {
+	public ResponseEntity<?> remover(BigInteger id) {
 		Optional<GrupoMedicamentoEntity> grupo = grupoMedicamentoRepositorio.findById(id);
 		if (grupo.isPresent()) {
 			grupoMedicamentoRepositorio.deleteById(id); // remove pelo id
