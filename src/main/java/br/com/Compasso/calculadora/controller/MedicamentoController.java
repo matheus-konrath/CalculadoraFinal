@@ -46,13 +46,7 @@ public class MedicamentoController {
 		return (medicamentoService.lista());
 	}
 
-/*	@PostMapping("/medi")
-	@Transactional
-	public MedicamentoDto Cadastrar(@RequestBody @Validated MedicamentoForm form) {
-		MedicamentoEntity medicamento = medicamentoService.inser(form);
-		return new MedicamentoDto(medicamento);
-	}
-	*/
+
 	
 	@PostMapping("/medi")
 	@Transactional

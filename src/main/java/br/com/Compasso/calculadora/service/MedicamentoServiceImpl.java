@@ -16,7 +16,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 import br.com.Compasso.calculadora.dto.DiluicaoDto;
 import br.com.Compasso.calculadora.dto.MedicamentoConfiguracaoDto;
 import br.com.Compasso.calculadora.dto.MedicamentoDto;
+import br.com.Compasso.calculadora.dto.RecordNotFoundException;
 import br.com.Compasso.calculadora.form.AtualizaMedicamentoForm;
+import br.com.Compasso.calculadora.form.DiluicaoConfiguracaoAtualizarForm;
 import br.com.Compasso.calculadora.form.DiluicaoForm;
 import br.com.Compasso.calculadora.form.MedicamentoConfiguraForm;
 import br.com.Compasso.calculadora.form.MedicamentoForm;
@@ -59,6 +61,9 @@ public class MedicamentoServiceImpl {
 	//busca elementos do grupoMedicamentos inseridos  #GET
 	public ResponseEntity<List<MedicamentoDto>> lista() {
 		List<MedicamentoEntity> medicamento = medicamentoRepositorio.findAll();
+		if(medicamento == null) {
+			throw new RecordNotFoundException("Medicamento não encontrado");
+		}
 		List<MedicamentoDto> MedicamentoList = new ArrayList<MedicamentoDto>();
 
 		medicamento.forEach(med -> {
@@ -75,33 +80,36 @@ public class MedicamentoServiceImpl {
 			return ResponseEntity.ok(new MedicamentoDto(medicamentoRepositorio.getById(id)));
 		}
 
-		return ResponseEntity.notFound().build(); // Não encontrado
+		 throw new RecordNotFoundException("Id do medicamento não encontrado"); // Não encontrado
 	}
 
 
 	
 	@Transactional
+	//Método POST   cria um elemento
 	public ResponseEntity<MedicamentoConfiguracaoDto> criar(MedicamentoConfiguraForm medicamentoConfiguracaoForm,
 			UriComponentsBuilder uriBuilder) {
 		if ((grupoMedicamentoRepositorio.findById(medicamentoConfiguracaoForm.getIdGrupoMedicamento()) == null)
 				|| (laboratorioRepositorio.findById(medicamentoConfiguracaoForm.getIdLaboratorio()) == null)) {
-			throw new RuntimeException();
+			throw new RecordNotFoundException("O id não foi encontrado");
 		} else {
-			Optional<LaboratorioEntity> laboratorio = laboratorioRepositorio
-					.findById(medicamentoConfiguracaoForm.getIdLaboratorio());
+			//Busca pelo Grupo Medicamento
 			Optional<GrupoMedicamentoEntity> grupoMedicamento = grupoMedicamentoRepositorio
 					.findById(medicamentoConfiguracaoForm.getIdGrupoMedicamento());
+			//Busca pelo id do Laboratroio
+			Optional<LaboratorioEntity> laboratorio = laboratorioRepositorio
+					.findById(medicamentoConfiguracaoForm.getIdLaboratorio());
 			MedicamentoEntity medicamento = new OperacoesService().medicamentoConfiguracaoFormToMedicamento(
 					medicamentoConfiguracaoForm, laboratorio.get(), grupoMedicamento.get());
 
 			medicamentoRepositorio.save(medicamento);
-			// BigInteger idMedicamento = medicamento.getId();
+			
 
-			List<DiluicaoForm> diluicaoConfiguracaoFormList = medicamentoConfiguracaoForm
-					.getDiluicaoConfiguracao();
+			List<DiluicaoConfiguracaoAtualizarForm> diluicaoConfiguracaoFormList = medicamentoConfiguracaoForm
+					.getDiluicaoConfiguracaoList();
 			List<DiluicaoDto> diluicaoConfiguracaoList = new ArrayList<>();
 			if (!diluicaoConfiguracaoFormList.isEmpty()) {
-				for (DiluicaoForm diluicaoConfiguracaoForm : diluicaoConfiguracaoFormList) {
+				for (DiluicaoConfiguracaoAtualizarForm diluicaoConfiguracaoForm : diluicaoConfiguracaoFormList) {
 					Optional<ViaAdministracaoEntity> viaAdministracao = viaAdministracaoRepositorio
 							.findById(diluicaoConfiguracaoForm.getViaAdministracaoId());
 
@@ -110,10 +118,10 @@ public class MedicamentoServiceImpl {
 									viaAdministracao.get());
 					diluicaoRepositorio.save(diluicaoConfiguracao);
 					diluicaoConfiguracaoList.add(new DiluicaoDto(diluicaoConfiguracao));
-				}
+			}
 			}
 
-			URI uri = uriBuilder.path("/criar/{id}").buildAndExpand(medicamento.getId()).toUri();
+			URI uri = uriBuilder.path("/criar").buildAndExpand(medicamento.getId()).toUri();
 			return ResponseEntity.created(uri)
 					.body(new MedicamentoConfiguracaoDto(medicamento, diluicaoConfiguracaoList));
 		}
@@ -124,23 +132,27 @@ public class MedicamentoServiceImpl {
 	
 
 	@Transactional
+	// Método Put atualiza um elemento
 	public ResponseEntity<MedicamentoConfiguracaoDto> atualiza(BigInteger id,
 			MedicamentoConfiguraForm medicamentoConfiguracaoForm) {
+		BigInteger idGrupoMedicamento = medicamentoConfiguracaoForm.getIdGrupoMedicamento();
+		MedicamentoEntity medicamentos = medicamentoRepositorio.getById(id);
+		BigInteger idLaboratorio = medicamentoConfiguracaoForm.getIdLaboratorio();
 		if (!medicamentoRepositorio.existsById(id)
 				|| (grupoMedicamentoRepositorio.findById(medicamentoConfiguracaoForm.getIdGrupoMedicamento()) == null)
 				|| (laboratorioRepositorio.findById(medicamentoConfiguracaoForm.getIdLaboratorio()) == null)) {
-			throw new RuntimeException();
+			throw new RecordNotFoundException("O id não foi encontrado");
 		} else {
 			try {
 				MedicamentoEntity medicamento = new OperacoesService().medicamentoFormToMedicamento(id,
 						medicamentoConfiguracaoForm, medicamentoRepositorio, grupoMedicamentoRepositorio,
 						laboratorioRepositorio);
 
-				List<DiluicaoForm> diluicaoFormList = medicamentoConfiguracaoForm
-						.getDiluicaoConfiguracao();
+				List<DiluicaoConfiguracaoAtualizarForm> diluicaoConfiguracaoFormList = medicamentoConfiguracaoForm
+						.getDiluicaoConfiguracaoList();
 				List<DiluicaoDto> diluicaoConfiguracaoList = new ArrayList<>();
-				if (!diluicaoFormList.isEmpty()) {
-					for (DiluicaoForm diluicaoConfiguracaoForm : diluicaoFormList) {
+				if (!diluicaoConfiguracaoFormList.isEmpty()) {
+					for (DiluicaoConfiguracaoAtualizarForm diluicaoConfiguracaoForm : diluicaoConfiguracaoFormList) {
 						
 						DiluicaoConfiguracaoEntity diluicaoConfiguracao = new OperacoesService()
 								.diluicaoAtualizarFormToDiluicao(medicamento.getId(),
@@ -149,7 +161,6 @@ public class MedicamentoServiceImpl {
 										medicamentoRepositorio, viaAdministracaoRepositorio,
 										diluicaoRepositorio);
 						diluicaoConfiguracaoList.add(new DiluicaoDto(diluicaoConfiguracao));
-
 					}
 				}
 				return (ResponseEntity.ok(new MedicamentoConfiguracaoDto(medicamento, diluicaoConfiguracaoList)));

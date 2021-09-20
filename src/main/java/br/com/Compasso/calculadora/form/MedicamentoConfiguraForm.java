@@ -2,6 +2,7 @@ package br.com.Compasso.calculadora.form;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Collections;
 import java.util.List;
 
 public class MedicamentoConfiguraForm {
@@ -9,38 +10,44 @@ public class MedicamentoConfiguraForm {
 	private String nome;
 	private BigInteger idGrupoMedicamento;
 	private BigInteger idLaboratorio;
-	private BigDecimal quantidadeApresentada;
-	private BigDecimal concentracaoInicial;
+	private BigDecimal quantidadeApresentacao;
+	private BigDecimal concentracao;
 	private String infoSobra;
 	private String infoObservacao;
 	private String infoTempoAdministracao;
 	private String unidadeMedida;
 	private String embalagemApresentada;
-	List<DiluicaoForm> diluicaoList;
+	List<DiluicaoConfiguracaoAtualizarForm> diluicaoConfiguracaoList;
 	
 	
 	
 	public MedicamentoConfiguraForm(String nome, BigInteger idGrupoMedicamento, BigInteger idLaboratorio,
-			BigDecimal quantidadeApresentada, BigDecimal concentracaoInicial, String infoSobra, String infoObservacao,
+			BigDecimal quantidadeApresentacao, BigDecimal concentracaoInicial, String infoSobra, String infoObservacao,
 			String infoTempoAdministracao, String unidadeMedida, String embalagemApresentada,
-			List<DiluicaoForm> diluicaoConfiguracaoForm) {
+			List<DiluicaoConfiguracaoAtualizarForm> diluicaoConfiguracaoForm) {
 		this.nome = nome;
 		this.idGrupoMedicamento = idGrupoMedicamento;
 		this.idLaboratorio = idLaboratorio;
-		this.quantidadeApresentada = quantidadeApresentada;
-		this.concentracaoInicial = concentracaoInicial;
+		this.quantidadeApresentacao = quantidadeApresentacao;
+		this.concentracao = concentracaoInicial;
 		this.infoSobra = infoSobra;
 		this.infoObservacao = infoObservacao;
 		this.infoTempoAdministracao = infoTempoAdministracao;
 		this.unidadeMedida = unidadeMedida;
 		this.embalagemApresentada = embalagemApresentada;
 		diluicaoConfiguracaoForm.forEach(diluicao -> {
-			this.diluicaoList.add(diluicao);
-		}); 
+			this.diluicaoConfiguracaoList.add(diluicao);
+		});
+		
+	}
+	public MedicamentoConfiguraForm() {
 		
 	}
 
 
+	public List<DiluicaoConfiguracaoAtualizarForm> getDiluicaoConfiguracaoList() {
+		return Collections.unmodifiableList(diluicaoConfiguracaoList);
+	}
 
 	public String getNome() {
 		return nome;
@@ -79,25 +86,25 @@ public class MedicamentoConfiguraForm {
 
 
 	public BigDecimal getQuantidadeApresentacao() {
-		return quantidadeApresentada;
+		return quantidadeApresentacao;
 	}
 
 
 
-	public void setQuantidadeApresentacao(BigDecimal quantidadeApresentada) {
-		this.quantidadeApresentada = quantidadeApresentada;
+	public void setQuantidadeApresentacao(BigDecimal quantidadeApresentacao) {
+		this.quantidadeApresentacao = quantidadeApresentacao;
 	}
 
 
 
 	public BigDecimal getConcentracaoInicial() {
-		return concentracaoInicial;
+		return concentracao;
 	}
 
 
 
 	public void setConcentracaoInicial(BigDecimal concentracaoInicial) {
-		this.concentracaoInicial = concentracaoInicial;
+		this.concentracao = concentracaoInicial;
 	}
 
 
@@ -162,16 +169,6 @@ public class MedicamentoConfiguraForm {
 
 
 
-	public List<DiluicaoForm> getDiluicaoConfiguracao() {
-		return diluicaoList;
-	}
-
-
-
-	public void setDiluicaoConfiguracao(List<DiluicaoForm> diluicaoConfiguracaoList) {
-		this.diluicaoList = diluicaoConfiguracaoList;
-	}
-	
 	
 	
 	

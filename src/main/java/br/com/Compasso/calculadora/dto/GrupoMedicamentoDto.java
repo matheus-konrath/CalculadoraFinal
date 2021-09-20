@@ -11,7 +11,7 @@ import br.com.Compasso.calculadora.modelo.GrupoMedicamentoEntity;
 public class GrupoMedicamentoDto {
 	
 	//Atrinutos
-	private Long id;
+	private BigInteger id;
 	private String nome;
 	
 	// Método Construtor
@@ -20,7 +20,7 @@ public class GrupoMedicamentoDto {
 		this.nome = medi.getNome();
 	}
 	//Getters
-	public Long getId() {
+	public BigInteger getId() {
 		return id;
 	}
 	public String getNome() {

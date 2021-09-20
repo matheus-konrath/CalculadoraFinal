@@ -2,6 +2,7 @@ package br.com.Compasso.calculadora.service;
 
 import java.math.BigInteger;
 
+import br.com.Compasso.calculadora.form.DiluicaoConfiguracaoAtualizarForm;
 import br.com.Compasso.calculadora.form.DiluicaoForm;
 import br.com.Compasso.calculadora.form.MedicamentoConfiguraForm;
 import br.com.Compasso.calculadora.form.MedicamentoForm;
@@ -36,7 +37,7 @@ public class OperacoesService {
 	}
 	
 
-	public MedicamentoEntity medicamentoFormToMedicamento(MedicamentoForm medicamentoForm, LaboratorioEntity laboratorio,
+	public MedicamentoEntity medicamentoFormMedicamento(MedicamentoForm medicamentoForm, LaboratorioEntity laboratorio,
 			GrupoMedicamentoEntity grupoMedicamento) {
 		MedicamentoEntity medicamento = new MedicamentoEntity();
 		medicamento.setNome(medicamentoForm.getNome());
@@ -110,7 +111,7 @@ public class OperacoesService {
 		return diluicaoConfiguracao;
 	}
 
-	/*public DiluicaoConfiguracaoEntity diluicaoFormToDiluicaoConfiguracao(
+	public DiluicaoConfiguracaoEntity diluicaoFormToDiluicaoConfiguracao(
 			DiluicaoConfiguracaoAtualizarForm diluicaoConfiguracaoForm, MedicamentoEntity medicamento,
 			ViaAdministracaoEntity viaAdministracao) {
 		DiluicaoConfiguracaoEntity diluicaoConfiguracao = new DiluicaoConfiguracaoEntity();
@@ -126,9 +127,9 @@ public class OperacoesService {
 		diluicaoConfiguracao.setDiluente(diluicaoConfiguracaoForm.getDiluente());
 		return diluicaoConfiguracao;
 	}
-*/
+
 	public DiluicaoConfiguracaoEntity diluicaoAtualizarFormToDiluicao(BigInteger medicamentoId, BigInteger viaAdministracaoId,
-			BigInteger sequencia, DiluicaoForm diluicaoConfiguracaoAtualizarForm,
+			BigInteger sequencia, DiluicaoConfiguracaoAtualizarForm diluicaoConfiguracaoAtualizarForm,
 			MedicamentoRepositorio medicamentoRepository, ViaAdministracaoRepositorio viaAdministracaoRepository,
 			DiluicaoConfiguracaoRepositorio diluicaoConfiguracaoRepository) {
 		MedicamentoEntity medicamento = medicamentoRepository.getById(medicamentoId);
